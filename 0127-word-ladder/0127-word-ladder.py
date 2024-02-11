@@ -18,4 +18,3 @@ class Solution:
                         wordList.remove(new_word)
                         
         return 0
-                        
