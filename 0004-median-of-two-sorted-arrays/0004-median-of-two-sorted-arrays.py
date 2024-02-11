@@ -1,12 +1,32 @@
 class Solution:
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
-        new_arr = nums1 + nums2  # Concatenate two lists
-        new_arr.sort()  # Sort the combined list
-
-        n = len(new_arr)
-        if n % 2 != 0:  # If the length is odd
-            return float(new_arr[n // 2])
-        else:  # If the length is even
-            return float((new_arr[n // 2 - 1] + new_arr[n // 2]) / 2)
-
+        # Ensure nums1 is the smaller array
+        if len(nums1) > len(nums2):
+            nums1, nums2 = nums2, nums1
         
+        m, n = len(nums1), len(nums2)
+        total_len = m + n
+        is_even = total_len % 2 == 0
+        
+        # Perform binary search on the smaller array
+        low, high = 0, m
+        while low <= high:
+            partition_nums1 = (low + high) // 2
+            partition_nums2 = (total_len + 1) // 2 - partition_nums1
+            
+            max_left_nums1 = float('-inf') if partition_nums1 == 0 else nums1[partition_nums1 - 1]
+            min_right_nums1 = float('inf') if partition_nums1 == m else nums1[partition_nums1]
+            
+            max_left_nums2 = float('-inf') if partition_nums2 == 0 else nums2[partition_nums2 - 1]
+            min_right_nums2 = float('inf') if partition_nums2 == n else nums2[partition_nums2]
+            
+            if max_left_nums1 <= min_right_nums2 and max_left_nums2 <= min_right_nums1:
+                # Found the correct partition
+                if is_even:
+                    return (max(max_left_nums1, max_left_nums2) + min(min_right_nums1, min_right_nums2)) / 2
+                else:
+                    return float(max(max_left_nums1, max_left_nums2))
+            elif max_left_nums1 > min_right_nums2:
+                high = partition_nums1 - 1
+            else:
+                low = partition_nums1 + 1
