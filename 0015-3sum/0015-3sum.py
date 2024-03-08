@@ -1,18 +1,22 @@
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
-        ans=set()
         nums.sort()
-        n=len(nums)
-        for i in range(n-2):
-            j=i+1
-            k=n-1
-            while j<k:
-                temp=nums[i]+nums[j]+nums[k]
-                if temp==0:
-                    ans.add((nums[i],nums[j],nums[k]))
-                    j+=1
-                elif temp>0:
-                    k-=1
+        triplets = set()
+        for i in range(len(nums) - 2):
+            firstNum = nums[i]
+            j = i + 1
+            k = len(nums) - 1
+            while j < k:
+                secondNum  = nums[j]
+                thirdNum = nums[k]
+
+                potentialSum = firstNum + secondNum + thirdNum 
+                if potentialSum > 0:
+                    k -= 1
+                elif potentialSum < 0:
+                    j += 1
                 else:
-                    j+=1
-        return ans
+                    triplets.add((firstNum , secondNum ,thirdNum))
+                    j += 1
+                    k -= 1
+        return triplets
