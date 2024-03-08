@@ -1,8 +1,21 @@
 class Solution:
     def myPow(self, x: float, n: int) -> float:
-        def helper(n, p):
-            if p==0 or n==1: return 1
-            if p<0: return 1/helper(n, -p)
-            rs = helper(n*n, p//2)
-            return rs * n if p&1 else rs
-        return helper(x, n)
+        negative = False
+        if x == 1:
+            return x
+        if n == 0:
+            return 1
+        elif n<0:
+            negative = True
+            n=abs(n)
+        ans = 1
+        while n>1:
+            if n % 2 == 1:
+                ans = ans * x
+                n=n-1
+            x= x*x
+            n=n/2
+        if negative == True:
+            return 1/(ans*x)
+        else:
+            return ans * x
