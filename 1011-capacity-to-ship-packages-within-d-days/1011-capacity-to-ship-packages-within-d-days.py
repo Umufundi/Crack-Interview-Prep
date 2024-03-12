@@ -1,29 +1,25 @@
-import functools
 class Solution:
     def shipWithinDays(self, weights: List[int], days: int) -> int:
-        N = len(weights)
-        l, r = max(weights), sum(weights)
-        m = None
-        @functools.cache
-        def _days(capacity:int) -> int:
-            i = 0
-            d = 0
-            while i < N:
-                d+=1
-                tank = capacity
-                while i < N and tank >= weights[i]:
-                    tank-=weights[i]
-                    i+=1
-            return d
-        while True:
-            m = (l+r)//2
-            if _days(m)==days and _days(m-1)<days:
-                return m
-            elif _days(m) <= days:
-                r = m
-            elif _days(m) > days:
-                l = m
-            if r-l<=1:
-                if _days(l)<=days:
-                    return l
-                return r
+        def is_enough(max_load):
+            total = 1
+            curr_load = 0
+            for w in weights:
+                if curr_load + w <= max_load:
+                    curr_load += w
+                else:
+                    total += 1
+                    curr_load = w
+            return total <= days
+
+        max_load = max(weights)
+        daily = (len(weights)-1) // days + 1
+        h = max_load * daily
+        l = max(max_load, min(weights)*daily)
+        # print(l, h)
+        while l <= h:
+            m = l + (h - l) // 2
+            if is_enough(m):
+                h = m - 1
+            else:
+                l = m + 1
+        return l
