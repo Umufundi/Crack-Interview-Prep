@@ -1,22 +1,14 @@
 class Solution:
     def subarraySum(self, nums: List[int], k: int) -> int:
-        # Dictionary to store cumulative sums and their counts
-        d = {0: 1}
-        sums = 0  # Cumulative sum
-        count = 0  # Result counter
+        prefix_map = {0: 1}
 
-        # Iterate through the array
-        for i in range(len(nums)):
-            sums += nums[i]  # Update cumulative sum
+        prefix_sum = 0
+        ans = 0 
+        for n in nums:
+            prefix_sum += n
+            if prefix_sum - k in prefix_map:
+                ans += prefix_map[prefix_sum - k]
+            
+            prefix_map[prefix_sum] = prefix_map.get(prefix_sum, 0) + 1
 
-            # If (current cumulative sum - k) exists in the dictionary, add its count to the result
-            if sums - k in d:
-                count += d[sums - k]
-
-            # Update the dictionary with the current cumulative sum
-            if sums in d:
-                d[sums] += 1
-            else:
-                d[sums] = 1
-
-        return count
+        return ans
