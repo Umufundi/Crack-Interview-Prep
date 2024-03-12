@@ -1,16 +1,21 @@
 class Solution:
     def multiply(self, mat1: List[List[int]], mat2: List[List[int]]) -> List[List[int]]:
-        mat1_rows = len(mat1) 
-        mat1_cols = len(mat1[0])
-
-        mat2_cols = len(mat2[0])
-
-        result = [[0 for _ in range(mat2_cols)] for _ in range(mat1_rows)]
-
-        for i in range(mat1_rows):
-            for j in range(mat1_cols):
+        if not mat1 or not mat2:
+            return []
+        ma, na = len(mat1), len(mat1[0])
+        mb, nb = len(mat2), len(mat2[0])
+        res = [ [0]*nb for i in range(ma) ]
+        pa, pb = [], []
+        for i in range(ma):
+            for j in range(na):
                 if mat1[i][j] != 0:
-                    for k in range(mat2_cols):
-                        if mat2[j][k] != 0:
-                            result[i][k] += mat1[i][j] * mat2[j][k] 
-        return result
+                    pa.append((i, j, mat1[i][j]))
+        for i in range(mb):
+            for j in range(nb):
+                if mat2[i][j] != 0:
+                    pb.append((i, j, mat2[i][j]))
+        for i, j, v1 in pa:
+            for k, l, v2 in pb:
+                if j == k:
+                    res[i][l] += v1 * v2
+        return res 
