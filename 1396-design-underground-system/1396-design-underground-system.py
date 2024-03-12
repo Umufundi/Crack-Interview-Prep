@@ -1,21 +1,17 @@
 class UndergroundSystem:
 
     def __init__(self):
-        self.checkInMap={}
-        self.totalMap={}
+        self.i=defaultdict(tuple)
+        self.o=defaultdict(list)
 
+    def checkIn(self, id: int, stationName: str, t: int) -> None:
+        self.i[id]=(t,stationName)
 
-    def checkIn(self, id: int, startStation: str, t: int) -> None:
-        self.checkInMap[id]=(startStation, t)
-
-    def checkOut(self, id: int, endStation: str, t: int) -> None:
-        start, time = self.checkInMap[id]
-        route=(start, endStation)
-        if route not in self.totalMap:
-            self.totalMap[route]=[0,0]
-        self.totalMap[route][0]+=t-time
-        self.totalMap[route][1]+=1
+    def checkOut(self, id: int, stationName: str, t: int) -> None:
+        starttime,startstation=self.i[id]
+        total=t-starttime
+        self.o[(startstation,stationName)].append(total)
 
     def getAverageTime(self, startStation: str, endStation: str) -> float:
-        total, count =self.totalMap[(startStation, endStation)]
-        return total / count
+        return sum(self.o[(startStation,endStation)])/len(self.o[(startStation,endStation)])
+        
