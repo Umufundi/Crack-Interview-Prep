@@ -1,20 +1,16 @@
 class Solution:
-    def rotate(self, matrix: List[List[int]]) -> None:
+    def rotate(self, mat: List[List[int]]) -> None:
         """
         Do not return anything, modify matrix in-place instead.
         """
-        def transpose(matrix):
-            for i in range(len(matrix)):
-                for j in range(i, len(matrix[0])):
-                    matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
-
-        def reverse_rows(matrix):
-            for r in range(len(matrix)):
-                left, right = 0, len(matrix) - 1
-                while left < right:
-                    matrix[r][left], matrix[r][right] = matrix[r][right], matrix[r][left]
-                    left += 1
-                    right -= 1
-
-        transpose(matrix)
-        reverse_rows(matrix)
+        n = len(mat)
+        for i in range(n):
+            for j in range(i):
+                mat[i][j], mat[j][i] = mat[j][i], mat[i][j]
+        
+        for r in range(n):
+            i, j = 0, n-1
+            while i<=j:
+                mat[r][i], mat[r][j] = mat[r][j], mat[r][i]
+                i+=1
+                j-=1
