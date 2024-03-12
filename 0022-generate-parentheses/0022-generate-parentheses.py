@@ -1,19 +1,20 @@
 class Solution:
     def generateParenthesis(self, n: int) -> List[str]:
-
-        def dfs(left,right,s):
-            if len(s)==n*2:
-                res.append(s)
+        def solver(op,cl,str):
+            if op==0 and cl==0:
+                output.append(str)
                 return
-            if left<n:
-                dfs(left+1,right,s+'(')
-
-            if right<left:
-                dfs(left,right+1,s+')')
-
-
-
-
-        res=[]
-        dfs(0,0,'')
-        return res
+            if op!=0:
+                res1=str
+                res1+='('
+                solver(op-1,cl,res1)
+            if cl>op:
+                res2=str
+                res2+=')'
+                solver(op,cl-1,res2)
+        open=n
+        close=n
+        str=''
+        output=[]
+        solver(open,close,str)
+        return output
