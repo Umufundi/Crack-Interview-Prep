@@ -1,21 +1,23 @@
+
 class Solution:
     def multiply(self, mat1: List[List[int]], mat2: List[List[int]]) -> List[List[int]]:
-        if not mat1 or not mat2:
-            return []
-        ma, na = len(mat1), len(mat1[0])
-        mb, nb = len(mat2), len(mat2[0])
-        res = [ [0]*nb for i in range(ma) ]
-        pa, pb = [], []
-        for i in range(ma):
-            for j in range(na):
-                if mat1[i][j] != 0:
-                    pa.append((i, j, mat1[i][j]))
-        for i in range(mb):
-            for j in range(nb):
-                if mat2[i][j] != 0:
-                    pb.append((i, j, mat2[i][j]))
-        for i, j, v1 in pa:
-            for k, l, v2 in pb:
-                if j == k:
-                    res[i][l] += v1 * v2
-        return res 
+        m, k, n = len(mat1), len(mat1[0]), len(mat2[0])
+
+        def matrixCompress(mat):
+            compressed = [[] for _ in range(len(mat))]
+            for row in range(len(mat)):
+                for col in range(len(mat[0])):
+                    if mat[row][col]:
+                        compressed[row].append([mat[row][col], col])
+            return compressed
+
+
+        res = [[0 for j in range(n)] for i in range(m)] 
+        A = matrixCompress(mat1)
+        B = matrixCompress(mat2)
+
+        for m1_row in range(m):
+            for element1, m1_col in A[m1_row]:
+                for element2, m2_col in B[m1_col]:
+                    res[m1_row][m2_col] += element1 * element2
+        return res
