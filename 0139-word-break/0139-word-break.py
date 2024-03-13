@@ -1,11 +1,18 @@
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        
-        words = set(wordDict)
-        dp = [False] * (len(s) + 1)
-        dp[0] = True
-
-        for i in range(1, len(s)+1):
-            dp[i] = any(dp[i-j] and s[i-j:i] in words for j in range(1, i+1))
-                
-        return dp[-1]
+        memo = {}
+        wordSet = set(wordDict)
+        return self.dfs(s, wordSet, memo)
+    
+    def dfs(self, s, wordSet, memo):
+        if s in memo:
+            return memo[s]
+        if s in wordSet:
+            return True
+        for i in range(1, len(s)):
+            prefix = s[:i]
+            if prefix in wordSet and self.dfs(s[i:], wordSet, memo):
+                memo[s] = True
+                return True
+        memo[s] = False
+        return False
