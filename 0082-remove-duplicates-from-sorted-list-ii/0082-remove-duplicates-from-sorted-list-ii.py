@@ -4,31 +4,23 @@
 #         self.val = val
 #         self.next = next
 class Solution:
-    def deleteDuplicates(self, head: ListNode) -> ListNode:
-        # sentinel
-        sentinel = ListNode(0, head)
+    def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        dummy = ListNode(0)
 
-        # predecessor = the last node 
-        # before the sublist of duplicates
-        pred = sentinel
-        
-        while head:
-            # If it's the beginning of a duplicates sublist 
-            # skip all duplicates
-            if head.next and head.val == head.next.val:
-                # move till the end of duplicates sublist
-                while head.next and head.val == head.next.val:
-                    head = head.next
-
-                # Skip all duplicates
-                pred.next = head.next
-
-            # Otherwise, move predecessor
-            else:
-                pred = pred.next 
-                
-            # move forward
-            head = head.next
+        nums = set()
             
-        return sentinel.next
+        dummy.next = head
+        pre = dummy
+        curr = pre.next
         
+        while curr:
+            if curr.next and curr.val == curr.next.val:
+                while(curr.next and curr.val == curr.next.val):
+                    curr = curr.next
+                pre.next = curr.next
+            else:
+                pre = pre.next
+            
+            curr = curr.next
+
+        return dummy.next
