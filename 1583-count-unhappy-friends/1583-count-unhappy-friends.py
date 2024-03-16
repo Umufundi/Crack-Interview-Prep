@@ -1,24 +1,19 @@
 class Solution:
     def unhappyFriends(self, n: int, preferences: List[List[int]], pairs: List[List[int]]) -> int:
-        ranks = {}
-        for person, pref in enumerate(preferences):
-            ranks[person] = defaultdict(lambda: n)
-            for rank, peer in enumerate(pref):
-                ranks[person][peer] = rank
-        partner = {}        
-        for p1, p2 in pairs:
-            partner[p1] = p2
-            partner[p2] = p1
-        ans = 0
-        for p1, p2 in pairs:
-            for peer in preferences[p1]:
-                if (ranks[p1][peer] < ranks[p1][p2] and
-                    ranks[peer][p1] < ranks[peer][partner[peer]]):
-                    ans += 1
-                    break
-            for peer in preferences[p2]:
-                if (ranks[p2][peer] < ranks[p2][p1] and
-                    ranks[peer][p2] < ranks[peer][partner[peer]]):
-                    ans += 1
-                    break
-        return ans 
+        friends_unhappy = set([])
+        existing_pairs = {}
+        for pair in pairs:
+            p1,p2 = pair
+            existing_pairs[p1] = p2
+            existing_pairs[p2] = p1
+        for pair in pairs:
+            p1,p2 = pair
+            for i in range(preferences[p1].index(p2)-1,-1,-1):
+                if preferences[p1][i] in existing_pairs and preferences[preferences[p1][i]].index(p1) < preferences[preferences[p1][i]].index(existing_pairs[preferences[p1][i]]):
+                    friends_unhappy.add(p1)
+                    break   
+            for i in range(preferences[p2].index(p1)-1,-1,-1):
+                if preferences[p2][i] in existing_pairs and preferences[preferences[p2][i]].index(p2) < preferences[preferences[p2][i]].index(existing_pairs[preferences[p2][i]]):
+                    friends_unhappy.add(p2)
+                    break   
+        return len(friends_unhappy)
