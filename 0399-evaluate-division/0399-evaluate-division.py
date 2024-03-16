@@ -1,42 +1,31 @@
-from collections import defaultdict, deque
-
 class Solution:
-    def calcEquation(self, equations, values, queries):
-        graph = self.buildGraph(equations, values)
-        results = []
-        
-        for dividend, divisor in queries:
-            if dividend not in graph or divisor not in graph:
-                results.append(-1.0)
-            else:
-                result = self.bfs(dividend, divisor, graph)
-                results.append(result)
-        
-        return results
-    
-    def buildGraph(self, equations, values):
+    def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
+        def divide(x, y, visited):
+            if x == y: # find the last node, then return 1.0
+                return 1.0
+            visited.add(x)
+            for n in graph[x]:
+                if n not in visited:
+                    visited.add(n)
+                    d = divide(n, y, visited)
+                    if d > 0:
+                        # return the weighted edge multiply
+                        return d * graph[x][n] 
+            return -1.0
+
         graph = defaultdict(dict)
+        # zip can take multiple iterable objects
+        # iterate x, y in equations, value in values
+        for (x, y), value in zip(equations, values):
+            graph[x][y] = value
+            graph[y][x] = 1.0 / value
         
-        for (dividend, divisor), value in zip(equations, values):
-            graph[dividend][divisor] = value
-            graph[divisor][dividend] = 1.0 / value
+        ans = []
+        for x, y in queries:
+            if x in graph and y in graph:
+                ans.append(divide(x, y, set()))
+            else:
+                ans.append(-1.0)
         
-        return graph
-    
-    def bfs(self, start, end, graph):
-        queue = deque([(start, 1.0)])
-        visited = set()
+        return ans
         
-        while queue:
-            node, value = queue.popleft()
-            
-            if node == end:
-                return value
-            
-            visited.add(node)
-            
-            for neighbor, weight in graph[node].items():
-                if neighbor not in visited:
-                    queue.append((neighbor, value * weight))
-        
-        return -1.0
